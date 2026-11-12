@@ -1,21 +1,21 @@
 import { useMutation } from "@tanstack/react-query";
-import { makeIsPlanned } from "../api/spark";
+import { createPlan } from "../api/plan";
 import { AppDispatchContext } from "../context/AppContext";
 import { useContext } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
-export function useMakeIsPlanned() {
+export function useCreatePlan() {
   let dispatch = useContext(AppDispatchContext);
   let queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: makeIsPlanned,
-    onMutate: async (id) => {
+    mutationFn: createPlan,
+    onMutate: async (data) => {
       const uid = crypto.randomUUID();
       await queryClient.cancelQueries({ queryKey: ["sparks"] });
       let oldData = queryClient.getQueryData(["sparks"]) || [];
       const newCache = oldData.map((spark) =>
-        spark.id === id ? { ...spark, inPlanning: true } : spark,
+        spark.id === data.id ? { ...spark, inPlanning: true } : spark,
       );
       queryClient.setQueryData(["sparks"], newCache);
       dispatch({

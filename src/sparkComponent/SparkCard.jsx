@@ -1,12 +1,13 @@
 import { Icon } from "../icon/Icon";
 import { useDeleteSpark } from "../hooks/useDeleteSpark";
-import { useMakeIsPlanned } from "../hooks/useMakeIsPlanned";
+import { useNavigate } from "react-router";
 
 export function SparkCard({ spark }) {
   const { inPlanning } = spark;
 
   let toDeleteSpark = useDeleteSpark();
-  let toMakeIsPlanned = useMakeIsPlanned();
+
+  const nav = useNavigate();
 
   return (
     <article className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200/90 shadow-xs hover:shadow-md transition-all flex flex-col justify-between min-h-[180px] group">
@@ -31,17 +32,16 @@ export function SparkCard({ spark }) {
         {/* Make it plan Button */}
         <button
           type="button"
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
-            inPlanning
-              ? "bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold"
-              : "text-gray-600 hover:text-blue-600 hover:bg-blue-50 border border-gray-200/70"
-          }`}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${inPlanning
+            ? "bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold"
+            : "text-gray-600 hover:text-blue-600 hover:bg-blue-50 border border-gray-200/70"
+            }`}
           title="Convert spark to plan"
-          onClick={() => toMakeIsPlanned.mutate(spark.id)}
+          onClick={() => nav(`/spark/initiate-plan?sparkId=${spark.id}`)}
           disabled={inPlanning}
         >
           <Icon name={inPlanning ? "CHECK" : "PLAN"} />
-          <span>{inPlanning ? "In planning" : "Make it plan"}</span>
+          <span>{inPlanning ? "Go to the plan board" : "Make it plan"}</span>
         </button>
         {/* Delete Button */}
         <button
